@@ -98,7 +98,7 @@ select,input[type=search]{background:var(--panel);border:1px solid var(--line2);
 .btn:hover{background:var(--panel2)}
 .btn.link{border:0;background:none;padding:0;min-height:0;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 /* selection bar */
-.selbar{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.selbar{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:10px 14px;background:var(--panel2);border-left:3px solid var(--accent)} .selbar .tray-title{font-weight:700}.selbar .tray-countries{display:flex;flex-wrap:wrap;gap:8px;flex:1}.selbar .tray-action{background:var(--accent);color:var(--accent-fg);border:0;font-weight:700;white-space:nowrap}.selbar .tray-action:disabled{opacity:.55;cursor:not-allowed}.selbar .chip .num{color:var(--muted);font-size:13px} .selbar[hidden]{display:none}
 .selbar .warn:empty{display:none}
 .selbar .warn,.toast{color:var(--fg);background:var(--sel);border:1px solid var(--accent);padding:4px 10px;font-size:14px}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:40;max-width:calc(100vw - 32px);box-shadow:0 2px 8px #0004}
@@ -148,13 +148,13 @@ thead th.stk{z-index:3;background:var(--panel2)}
 .stk0{left:0;width:44px;min-width:44px}.stk1{left:44px;box-shadow:1px 0 0 var(--line2)}
 tbody tr.r:hover td.stk{background:var(--panel2)}
 thead tr.grp th.stk{position:sticky}
-thead tr.grp th.gh{border-left:1px solid var(--line2);color:var(--fg);font-weight:600;background:var(--panel2);cursor:default;padding-block:6px}
+thead tr.grp th.gh{white-space:nowrap;line-height:1.2;border-left:1px solid var(--line2);color:var(--fg);font-weight:600;background:var(--panel2);cursor:default;padding-block:6px}
 table{border-collapse:collapse;width:100%;font-size:15px}
 th,td{padding:0 10px;height:38px;border-bottom:1px solid var(--line);white-space:nowrap}
 thead th{position:sticky;top:env(safe-area-inset-top,0px);z-index:2;background:var(--panel2);font:600 13px/1.25 var(--label);color:var(--fg);text-align:right;vertical-align:bottom;padding-block:8px;height:auto;cursor:pointer;white-space:normal;min-width:0;padding-inline:6px}
 thead th.l{text-align:left}
 thead th[aria-sort] .ar{color:var(--accent)}
-thead tr.grp th{cursor:default;font-weight:400;color:var(--muted);text-align:left;border-bottom:0;padding-bottom:0;position:static}
+thead tr.grp th{height:28px;line-height:1.2;cursor:default;font-weight:400;color:var(--muted);text-align:left;border-bottom:0;padding-bottom:0;position:static}
 td{text-align:right;font-family:var(--num);font-variant-numeric:tabular-nums}
 td.l{text-align:left;font-family:var(--body)}
 td.rk{color:var(--muted);width:44px}
@@ -262,6 +262,7 @@ footer p{max-width:70ch}
             <label class="ctl" for="m-key"><span>Measure</span><select id="m-key"></select></label>
             <details class="map-options"><summary id="mc-lab">Colour options</summary><div class="seg" role="group" aria-labelledby="mc-lab"><button type="button" id="mc-rank" data-mc="rank" title="Colours show rank bands: Top 5, 6 to 20, and so on">Rank band</button><button type="button" id="mc-q" data-mc="q" title="Each colour holds a fifth of the countries with data">Fifths (equal-size groups)</button></div></details>
           </div></div></header><div class="view">
+    <div class="selbar" id="compare-tray"></div>
     <section id="v-map" role="tabpanel" aria-labelledby="t-map" hidden>
       <div class="mapgrid">
         <div class="maphead">
@@ -272,7 +273,7 @@ footer p{max-width:70ch}
         </div>
         <div><h2 id="m-toptitle" style="margin-bottom:4px">Top 10</h2><p class="hint" id="m-cap" style="margin-bottom:6px"></p><p class="find" id="m-find" hidden></p><div class="toplist" id="m-top"></div><p class="hint" style="margin-top:8px">Small circles mark countries too small to see on the map. Click any country to see its profile.</p></div>
       </div>
-      <div class="selbar" style="margin-top:14px"></div>
+
     </section>
 
     <section id="v-table" role="tabpanel" aria-labelledby="t-table" hidden>
@@ -282,7 +283,7 @@ footer p{max-width:70ch}
         <div class="ctl desk"><span>Area cells (same scale for every column)</span><div class="scale" id="scale"></div></div>
         <button class="btn desk" type="button" id="colsBtn" aria-pressed="false"></button>
       </div>
-      <div class="selbar" style="margin-top:12px"></div>
+
       <div class="tfade" id="tfade"><div class="tblwrap" id="tblwrap" style="margin-top:12px"><table id="tbl"></table></div></div>
       <div class="more" style="margin-top:12px"><button class="btn" type="button" id="moreBtn"></button><span class="hint" id="moreHint"></span></div>
       <ul class="notes" style="margin-top:12px">
@@ -414,9 +415,8 @@ function toggle(iso){const i=S.sel.indexOf(iso); if(i>=0) S.sel.splice(i,1); els
 const colOf=iso=>{const i=S.sel.indexOf(iso); return i<0?null:"var("+COLORS[i]+")";};
 const OPTS=C.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c=>'<option value="'+c.iso+'">'+esc(c.name)+'</option>').join("");
 function renderSel(){
-  const h='<span class="hint">Selected for Compare:</span>'+(S.sel.length?S.sel.map((iso,i)=>'<span class="chip" style="--cc:var('+COLORS[i]+')"><span class="dot"></span><button class="nm" type="button" data-pf="'+iso+'">'+esc(BY[iso].name)+'</button><button class="x" type="button" aria-label="Remove '+esc(BY[iso].name)+'" data-rm="'+iso+'">×</button></span>').join(""):'<span class="hint">none</span>')+
-   (S.sel.length<4?'<label class="hint" style="display:flex;gap:6px;align-items:center">Add <select class="add" aria-label="Add a country to Compare"><option value="">choose a country…</option>'+OPTS+'</select></label>':'<span class="hint">(4 maximum)</span>')+'<span class="warn" role="status">'+esc(S.msg||"")+'</span>';
-  document.querySelectorAll(".selbar").forEach(e=>{e.innerHTML=h; e.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>toggle(b.dataset.rm)); const a=e.querySelector(".add"); if(a) a.onchange=ev=>{if(ev.target.value&&!S.sel.includes(ev.target.value)) toggle(ev.target.value);};});
+  const h='<span class="tray-title">Comparing <span class="hint">'+S.sel.length+'/4 · '+esc(M[S.total].l)+'</span></span><div class="tray-countries">'+(S.sel.length?S.sel.map((iso,i)=>'<span class="chip" style="--cc:var('+COLORS[i]+')"><span class="dot"></span><button class="nm" type="button" data-pf="'+iso+'">'+esc(BY[iso].name)+'</button><span class="num">'+(BY[iso].s[S.total]?fmt(BY[iso].s[S.total][0]):'–')+'</span><button class="x" type="button" aria-label="Remove '+esc(BY[iso].name)+'" data-rm="'+iso+'">×</button></span>').join(""):'<span class="hint">Choose countries on the map or in the table.</span>')+'</div>'+ (S.sel.length<4?'<select class="add" aria-label="Add a country to compare"><option value="">+ Add country</option>'+OPTS+'</select>':'')+'<button type="button" class="btn tray-action" data-open-compare'+(S.sel.length?'':' disabled')+'>Compare countries →</button><span class="warn" role="status">'+esc(S.msg||"")+'</span>';
+  document.querySelectorAll(".selbar").forEach(e=>{e.hidden=S.view==="compare";e.innerHTML=h;e.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>toggle(b.dataset.rm));const a=e.querySelector(".add");if(a)a.onchange=ev=>{if(ev.target.value&&!S.sel.includes(ev.target.value))toggle(ev.target.value);};const go=e.querySelector("[data-open-compare]");if(go)go.onclick=()=>{S.view="compare";try{history.replaceState(null,"","#compare");}catch(x){}render();};});
 }
 /* ---------- map ---------- */
 const SMALL={AND:[1.52,42.51],ATG:[-61.8,17.08],BHR:[50.55,26.07],BRB:[-59.55,13.19],COM:[43.33,-11.65],CPV:[-23.6,15.1],DMA:[-61.37,15.42],FSM:[158.2,6.9],GRD:[-61.68,12.12],KIR:[173,1.4],KNA:[-62.75,17.3],LCA:[-60.98,13.9],LIE:[9.55,47.16],MCO:[7.42,43.74],MDV:[73.5,4.2],MHL:[171.2,7.1],MLT:[14.4,35.9],MUS:[57.55,-20.3],NRU:[166.93,-0.52],PLW:[134.5,7.5],SGP:[103.82,1.35],SMR:[12.45,43.94],STP:[6.6,0.2],SYC:[55.45,-4.6],TON:[-175.2,-21.2],TUV:[179.2,-8.5],VAT:[12.45,41.9],VCT:[-61.2,13.25],WSM:[-172.1,-13.8]};
@@ -484,7 +484,7 @@ function renderTable(){
   $("#gloss").innerHTML='<dt>#</dt><dd>Rank on '+esc(M[T].l)+' (1 = strongest).</dd><dt>'+esc(M[T].l)+'</dt><dd>'+esc(M[T].d)+'. Out of 100.</dd>'+TCOLS.map(k=>'<dt>'+esc(M[k].l)+'</dt><dd>'+esc(M[k].d)+'. '+(M[k].k==="size"?'Size: '+esc(sizeNote(k))+'.':'Rating, 0–100: position among countries rated (100 = top).')+'</dd>').join("");
   const cb=$("#colsBtn"); cb.textContent=S.cols?"Show fewer areas":"Show all areas"; cb.setAttribute("aria-pressed",S.cols); cb.onclick=()=>{S.cols=!S.cols;renderTable();};
   const vis=S.cols?TCOLS:TCOLS.filter(k=>THEMES[T].cols.includes(k)), nc=vis.length+3+(S.cols?1:0);
-  const grp=[["Size — share of leader",vis.filter(k=>M[k].k==="size")],["Ratings — position among countries",vis.filter(k=>M[k].k==="index"&&!M[k].cond)],["Conditions",vis.filter(k=>M[k].cond)]].filter(g=>g[1].length);
+  const grp=[["Size",vis.filter(k=>M[k].k==="size")],["Ratings",vis.filter(k=>M[k].k==="index"&&!M[k].cond)],["Conditions",vis.filter(k=>M[k].cond)]].filter(g=>g[1].length);
   const first={}; grp.forEach(g=>first[g[1][0]]=1);
   const q=S.q.trim().toLowerCase();
   let rows=C.filter(c=>(!q||c.name.toLowerCase().includes(q)||c.iso.toLowerCase()===q)&&(!S.reg||c.region===S.reg));
