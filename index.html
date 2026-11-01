@@ -247,6 +247,7 @@ footer p{max-width:70ch}
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{transition:none!important}}
  .compare-values th,.compare-values td{padding:10px 14px;vertical-align:top}.compare-values thead th{white-space:normal;min-width:120px}.compare-values tbody th{min-width:230px;font-weight:600}.compare-values td{font-size:17px;font-weight:700}.compare-values .hint{font-weight:400;font-size:13px}
 .site-header{background:var(--panel);border:1px solid var(--line2)} .header-primary,.header-secondary{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:6px 14px}.header-primary{border-bottom:1px solid var(--line)}.header-primary h1{font-size:24px;white-space:nowrap}.header-primary .tabs{margin:0;border:0;gap:2px}.header-primary .tab{font-size:15px;min-height:34px;padding:5px 14px;border:0;border-bottom:2px solid transparent;background:transparent;margin:0}.header-primary .tab[aria-selected="true"]{border-bottom-color:var(--accent);box-shadow:none;color:var(--fg)}.header-primary .look{margin-left:auto}.header-secondary{gap:8px 18px}.header-secondary .totals{padding:0;border:0;gap:8px}.header-secondary .totals .seg button{min-height:32px}.header-secondary .map-toolbar{margin-left:auto}.header-secondary select{max-width:230px}.header-secondary .map-options{margin:0}.header-secondary .map-options[open]{z-index:5}.header-secondary .map-options[open] .seg{position:absolute;right:0;top:100%;width:max-content;max-width:90vw;box-shadow:0 3px 12px #0002}.view{border-top:1px solid var(--line2);margin-top:0}.wrap{gap:6px}@media(max-width:760px){.header-primary,.header-secondary{padding:6px 10px;gap:6px}.header-primary h1{font-size:20px}.header-primary .tabs{order:2;width:auto;flex:1}.header-primary .tab{font-size:14px;padding:5px 8px}.header-primary .look{order:3;margin-left:0}.header-secondary .totals{width:100%}.header-secondary .map-toolbar{margin-left:0;width:100%}.header-secondary select{max-width:180px}}
+.table-toolbar{display:flex;align-items:center;gap:8px;margin-left:auto;flex-wrap:wrap}.table-toolbar .ctl{display:block}.table-toolbar input,.table-toolbar select,.table-toolbar .btn{height:34px;min-height:34px;padding:4px 9px;font-size:14px}.table-toolbar input{width:170px}.table-toolbar select{max-width:145px}.legend-menu,.compare-menu{position:relative}.legend-menu summary,.compare-menu summary{cursor:pointer;white-space:nowrap;color:var(--muted);font-size:14px;padding:7px}.legend-menu[open] .scale,.compare-menu[open] .selbar{position:absolute;z-index:20;top:100%;right:0;width:max-content;max-width:min(92vw,760px);padding:12px;background:var(--panel);border:1px solid var(--line2);box-shadow:0 5px 16px #0002}.compare-menu[open] .selbar{min-width:min(650px,92vw)}.compare-menu .tray-countries{flex-basis:100%}.compare-menu .btn{min-height:34px;padding:5px 10px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:760px){.table-toolbar{margin:0;width:100%}.table-toolbar input{width:145px}.compare-menu[open] .selbar{right:auto;left:0}.header-primary .look{margin-left:auto}}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600&family=Source+Sans+3:wght@400;600;700&display=swap">
@@ -255,14 +256,18 @@ footer p{max-width:70ch}
       <button class="tab" role="tab" id="t-map" data-v="map" aria-controls="v-map">Map</button>
       <button class="tab" role="tab" id="t-table" data-v="table" aria-controls="v-table">Table</button>
       <button class="tab" role="tab" id="t-compare" data-v="compare" aria-controls="v-compare">Compare</button>
-    </div><div class="look"><span id="th-lab">Look</span><div class="seg" role="group" aria-labelledby="th-lab"><button type="button" id="th-light" data-th="light">Pastel</button><button type="button" id="th-dark" data-th="dark">Darcula</button><button type="button" id="th-atlas" data-th="atlas">Atlas print</button></div></div></div><div class="header-secondary">    <section class="totals" id="totals" aria-label="Theme total">
+    </div><details class="compare-menu" id="compare-menu"><summary id="compare-menu-label">Comparing</summary><div class="selbar" id="compare-tray"></div></details><div class="look"><span id="th-lab">Look</span><div class="seg" role="group" aria-labelledby="th-lab"><button type="button" id="th-light" data-th="light">Pastel</button><button type="button" id="th-dark" data-th="dark">Darcula</button><button type="button" id="th-atlas" data-th="atlas">Atlas print</button></div></div></div><div class="header-secondary">    <section class="totals" id="totals" aria-label="Theme total">
       <span class="lab" id="tt-lab">Rank countries by</span><div class="seg" role="group" aria-labelledby="tt-lab" id="ttseg"></div>
       <span class="hint" id="tt-desc" hidden></span>
     </section><div class="map-toolbar" id="map-toolbar">
             <label class="ctl" for="m-key"><span>Measure</span><select id="m-key"></select></label>
             <details class="map-options"><summary id="mc-lab">Colour options</summary><div class="seg" role="group" aria-labelledby="mc-lab"><button type="button" id="mc-rank" data-mc="rank" title="Colours show rank bands: Top 5, 6 to 20, and so on">Rank band</button><button type="button" id="mc-q" data-mc="q" title="Each colour holds a fifth of the countries with data">Fifths (equal-size groups)</button></div></details>
-          </div></div></header><div class="view">
-    <div class="selbar" id="compare-tray"></div>
+          </div>      <div class="table-toolbar" id="table-toolbar">
+        <label class="ctl" for="q"><input type="search" id="q" placeholder="Find a country…" aria-label="Find a country" autocomplete="off"></label>
+        <label class="ctl" for="reg"><span class="sr-only">Region</span><select id="reg"></select></label>
+        <details class="legend-menu desk"><summary>Colour key</summary><div class="scale" id="scale"></div></details>
+        <button class="btn desk" type="button" id="colsBtn" aria-pressed="false"></button>
+      </div></div></header><div class="view">
     <section id="v-map" role="tabpanel" aria-labelledby="t-map" hidden>
       <div class="mapgrid">
         <div class="maphead">
@@ -277,12 +282,7 @@ footer p{max-width:70ch}
     </section>
 
     <section id="v-table" role="tabpanel" aria-labelledby="t-table" hidden>
-      <div class="controls">
-        <label class="ctl" for="q"><span>Find a country</span><input type="search" id="q" placeholder="e.g. Brazil" autocomplete="off"></label>
-        <label class="ctl" for="reg"><span>Region</span><select id="reg"></select></label>
-        <div class="ctl desk"><span>Area cells (same scale for every column)</span><div class="scale" id="scale"></div></div>
-        <button class="btn desk" type="button" id="colsBtn" aria-pressed="false"></button>
-      </div>
+
 
       <div class="tfade" id="tfade"><div class="tblwrap" id="tblwrap" style="margin-top:12px"><table id="tbl"></table></div></div>
       <div class="more" style="margin-top:12px"><button class="btn" type="button" id="moreBtn"></button><span class="hint" id="moreHint"></span></div>
@@ -599,7 +599,7 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-pf]"); if(
 function render(){
   document.querySelectorAll("[data-tt]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.tt===S.total));
   $("#tt-desc").textContent=M[S.total].l+" = "+M[S.total].d.toLowerCase()+".";
-  $("#tt-desc2").textContent=$("#tt-desc").textContent; $("#totals").hidden=S.view==="compare"; $("#map-toolbar").hidden=S.view!=="map";
+  $("#tt-desc2").textContent=$("#tt-desc").textContent; $("#totals").hidden=S.view==="compare"; $("#map-toolbar").hidden=S.view!=="map"; $("#table-toolbar").hidden=S.view!=="table"; $("#compare-menu").hidden=S.view==="compare"; $("#compare-menu-label").textContent="Comparing ("+S.sel.length+")";
   document.querySelectorAll(".tab").forEach(t=>t.setAttribute("aria-selected",t.dataset.v===S.view));
   ["map","table","compare"].forEach(v=>$("#v-"+v).hidden=v!==S.view);
   renderSel();
