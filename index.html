@@ -1,10 +1,5 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-</head>
-<body>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body>
 <title>Power Atlas</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="claude:viewport-fit-sides" content="cover">
@@ -55,8 +50,8 @@
 html{scroll-behavior:smooth}
 body{font-feature-settings:"zero" 0;margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 var(--body);padding-block:14px 40px;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));overflow-x:hidden}
-.wrap{max-width:1680px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
-h1{font:var(--hw) clamp(28px,4vw,42px)/1.1 var(--display);letter-spacing:var(--ls);margin:0}
+.wrap{max-width:none;margin:0;display:flex;flex-direction:column;gap:8px}
+h1{font:var(--hw) clamp(24px,3vw,32px)/1.1 var(--display);letter-spacing:var(--ls);margin:0}
 h2{font:var(--hw) 21px/1.25 var(--display);margin:0;letter-spacing:var(--ls)}
 h3{font:var(--hw) 16px/1.3 var(--body);margin:0}
 p{margin:0}
@@ -92,7 +87,7 @@ details.how .in{padding:14px 16px 18px;display:flex;flex-direction:column;gap:14
 .howto svg{flex:none}
 /* tabs */
 .tabs{display:flex;gap:4px;margin-top:-6px;border-bottom:1px solid var(--line2)}
-.tab{border:1px solid var(--line);border-bottom:0;background:var(--panel2);padding:12px 32px;cursor:pointer;font:var(--hw) 20px var(--label);color:var(--muted);border-radius:var(--rad) var(--rad) 0 0;margin-bottom:-1px;min-height:48px}
+.tab{border:1px solid var(--line);border-bottom:0;background:var(--panel2);padding:7px 22px;cursor:pointer;font:var(--hw) 16px var(--label);color:var(--muted);border-radius:var(--rad) var(--rad) 0 0;margin-bottom:-1px;min-height:40px}
 .tab[aria-selected="true"]{background:var(--panel);border-color:var(--line2);color:var(--fg);border-bottom:1px solid var(--panel);box-shadow:inset 0 3px 0 var(--accent)}
 .tab:hover{color:var(--fg)}
 .view{background:var(--panel);border:1px solid var(--line2);border-top:0;padding:14px clamp(12px,2vw,28px) 22px;display:flex;flex-direction:column;gap:12px;margin-top:-14px}
@@ -246,6 +241,7 @@ footer p{max-width:70ch}
   td.l{max-width:150px;overflow:hidden;text-overflow:ellipsis}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto} *{transition:none!important}}
+ .compare-values th,.compare-values td{padding:10px 14px;vertical-align:top}.compare-values thead th{white-space:normal;min-width:120px}.compare-values tbody th{min-width:230px;font-weight:600}.compare-values td{font-size:17px;font-weight:700}.compare-values .hint{font-weight:400;font-size:13px}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;600;700&family=Source+Serif+4:opsz,wght@8..60,600&family=Source+Sans+3:wght@400;600;700&display=swap">
@@ -253,7 +249,7 @@ footer p{max-width:70ch}
   <header class="top">
     <div class="read">
       <h1>Power Atlas</h1>
-      <p class="lede">How 197 countries compare on military, economic, technological and diplomatic power, using public data from 20 sources.</p>
+      
     </div>
     <div class="look"><span id="th-lab">Look</span><div class="seg" role="group" aria-labelledby="th-lab">
       <button type="button" id="th-light" data-th="light">Pastel</button><button type="button" id="th-dark" data-th="dark">Darcula</button><button type="button" id="th-atlas" data-th="atlas">Atlas print</button></div></div>
@@ -548,6 +544,11 @@ function dotRow(keys,sel){return keys.map(k=>{
     const x=Math.max(0,Math.min(100,m[0])), lab=isNone(c,k)?"none":vtxt(c,k)+' · #'+m[1];
     return '<div style="position:absolute;top:'+(top+5)+'px;height:8px;left:0;width:'+x+'%;background:var(--cc);opacity:.55;'+cc+'"></div><span class="dot" style="position:absolute;top:'+(top+3)+'px;left:calc('+x+'% - 6px);'+cc+'"></span><span class="num" style="position:absolute;top:'+(top-1)+'px;font-size:13px;white-space:nowrap;left:calc('+x+'% + 10px)">'+lab+'</span>';}).join("");
   return '<div class="crow"><div><h3>'+esc(M[k].l)+'<span class="tag">'+tg+'</span></h3><div class="d">'+esc(M[k].d)+(K==="size"?' · '+esc(sizeNote(k)):K==="index"?' · Rating 0–100: position among countries rated':' · Out of 100')+'</div></div><div class="dots" style="position:relative;height:'+H+'px">'+svg.replace('<svg','<svg style="position:absolute;inset:0;width:100%;height:100%"')+lane+'</div></div>';}).join("");}
+function compareTable(keys,sel){
+  const head=sel.map(c=>'<th scope="col"><span class="dot" style="--cc:'+colOf(c.iso)+';margin-right:6px"></span>'+esc(c.name)+'</th>').join("");
+  const rows=keys.map(k=>'<tr><th scope="row" class="l">'+esc(M[k].l)+'<br><span class="hint">'+esc(M[k].d)+'</span></th>'+sel.map(c=>'<td class="num">'+(c.s[k]?(isNone(c,k)?'none':vtxt(c,k)+' <span class="hint">#'+c.s[k][1]+'</span>'):'<span class="hint">No data</span>')+'</td>').join("")+'</tr>').join("");
+  return '<div class="tblwrap" style="margin-top:8px"><table class="rawt compare-values"><thead><tr><th class="l">Measure</th>'+head+'</tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
 function axis(){return '<div class="axis"><span></span><div class="num">'+[0,25,50,75,100].map(t=>'<span style="left:'+t+'%">'+t+'</span>').join("")+'</div></div>';}
 function renderCompare(){
   const SO=C.slice().sort((a,b)=>a.name.localeCompare(b.name));
@@ -568,12 +569,12 @@ function renderCompare(){
     ["Cyber power tier","IISS (1 = strongest)",c=>c.cy.tier==null?"not assessed":"Tier "+c.cy.tier+" ("+c.cy.year+")"],
     ["Cyber power rank","Belfer Center National Cyber Power Index",c=>c.cy.belfer==null?"not ranked":"#"+c.cy.belfer]];
   const sec=(id,t,hint,body)=>'<details class="csec" data-sec="'+id+'"'+((S.co[id]??id==="areas")?" open":"")+'><summary><h2>'+t+'</h2><span class="hint">'+hint+'</span></summary>'+body+'</details>';
-  $("#cmp").innerHTML=sec("areas","Power areas","Nine measures: seven sizes (share of the leader) and two ratings",axis()+dotRow(AREAS,sel))+
-    sec("totals","Theme totals","This page's equal-weight averages of the areas, out of 100",axis()+dotRow(TK,sel))+
-    sec("ratings","Quality ratings","Position among countries rated, 0 to 100 (100 = top)",axis()+dotRow(RATINGS,sel))+
+  $("#cmp").innerHTML=sec("areas","Power areas","Nine measures: seven sizes (share of the leader) and two ratings",compareTable(AREAS,sel))+
+    sec("totals","Theme totals","This page's equal-weight averages of the areas, out of 100",compareTable(TK,sel))+
+    sec("ratings","Quality ratings","Position among countries rated, 0 to 100 (100 = top)",compareTable(RATINGS,sel))+
     sec("raw","AI and cyber","Raw figures: AI computing, top AI models, cyber power",'<div class="tblwrap" style="margin-top:10px"><table class="rawt"><thead><tr><th class="l">Measure</th>'+sel.map(c=>'<th><span class="dot" style="--cc:'+colOf(c.iso)+';margin-right:6px"></span>'+esc(c.name)+'</th>').join("")+'</tr></thead><tbody>'+
       raw.map(([t,d,f])=>'<tr><td class="l">'+t+' <span class="hint">· '+d+'</span></td>'+sel.map(c=>'<td>'+f(c)+'</td>').join("")+'</tr>').join("")+'</tbody></table></div>')+
-    sec("conds","Conditions (not power)","How stable and resilient a state is; never counted in a total",axis()+dotRow(CONDS,sel));
+    sec("conds","Conditions (not power)","How stable and resilient a state is; never counted in a total",compareTable(CONDS,sel));
   document.querySelectorAll("#cmp details").forEach(d=>d.ontoggle=()=>{S.co[d.dataset.sec]=d.open;});
 }
 /* ---------- profile ---------- */
@@ -623,5 +624,4 @@ const h0=location.hash.slice(1); if(["map","table","compare"].includes(h0)) S.vi
 initMap(); render();
 </script>
 
-</body>
-</html>
+</body></html>
