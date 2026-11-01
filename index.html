@@ -118,7 +118,7 @@ select,input[type=search]{background:var(--panel);border:1px solid var(--line2);
 .legend .xl i{border-right:1px solid var(--line2)}
 .mapbox{position:relative;border:1px solid var(--line);background:var(--panel2);overflow:hidden}
 #map .graticule{fill:none;stroke:var(--line2);stroke-width:.45;opacity:.45;pointer-events:none}
-.map-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.map-toolbar .ctl{flex-direction:row;align-items:center;gap:8px}.map-toolbar select{min-height:36px}.map-options{position:relative;margin-left:auto}.map-options summary{cursor:pointer;color:var(--muted);padding:6px 8px}.map-options[open] .seg{display:flex}.map-options .seg button{min-height:36px;font-size:13px}.maphead h2{font-size:18px}.legend{font-size:12px}.legend .k{min-width:60px}.legend .k i{height:8px}
+.map-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.map-toolbar .ctl{flex-direction:row;align-items:center;gap:8px}.map-toolbar select{min-height:36px}.map-options{position:relative;margin-left:auto}.map-options summary{cursor:pointer;color:var(--muted);padding:6px 8px}.map-options[open] .seg{display:flex}.map-options .seg button{min-height:36px;font-size:13px}.maphead h2{font-size:18px}.legend{font-size:12px}.legend .k{min-width:68px}.legend .k i{height:11px}.legend{font-size:14px}
 
 #map svg{width:100%;height:auto;display:block}
 #map path.c{stroke:var(--panel);stroke-width:.5;cursor:pointer}
@@ -165,7 +165,7 @@ tbody tr.r.on td.stk1{font-weight:700}
 tbody tr.r.on td.l .nmb{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--cc);text-decoration-thickness:2px}
 .nmb{border:0;background:none;padding:0;cursor:pointer;font-weight:700;text-align:left;color:var(--fg)}
 .nmb:hover{text-decoration:underline}
-.tbar{display:flex;align-items:center;gap:10px;min-width:170px}
+.tbar{display:flex;align-items:center;gap:10px;min-width:140px;max-width:300px} #tbl th.stk1{width:240px} #tbl th[data-s="total"]{width:300px}
 .tbar span.t{flex:1;height:14px;background:var(--panel2);position:relative}
 .tbar span.t i{position:absolute;left:0;top:0;bottom:0;background:var(--bar);min-width:2px}
 .tbar b{width:34px;text-align:right;font-weight:700}
@@ -415,8 +415,8 @@ function toggle(iso){const i=S.sel.indexOf(iso); if(i>=0) S.sel.splice(i,1); els
 const colOf=iso=>{const i=S.sel.indexOf(iso); return i<0?null:"var("+COLORS[i]+")";};
 const OPTS=C.slice().sort((a,b)=>a.name.localeCompare(b.name)).map(c=>'<option value="'+c.iso+'">'+esc(c.name)+'</option>').join("");
 function renderSel(){
-  const h='<span class="tray-title">Comparing <span class="hint">'+S.sel.length+'/4 · '+esc(M[S.total].l)+'</span></span><div class="tray-countries">'+(S.sel.length?S.sel.map((iso,i)=>'<span class="chip" style="--cc:var('+COLORS[i]+')"><span class="dot"></span><button class="nm" type="button" data-pf="'+iso+'">'+esc(BY[iso].name)+'</button><span class="num">'+(BY[iso].s[S.total]?fmt(BY[iso].s[S.total][0]):'–')+'</span><button class="x" type="button" aria-label="Remove '+esc(BY[iso].name)+'" data-rm="'+iso+'">×</button></span>').join(""):'<span class="hint">Choose countries on the map or in the table.</span>')+'</div>'+ (S.sel.length<4?'<select class="add" aria-label="Add a country to compare"><option value="">+ Add country</option>'+OPTS+'</select>':'')+'<button type="button" class="btn tray-action" data-open-compare'+(S.sel.length?'':' disabled')+'>Compare countries →</button><span class="warn" role="status">'+esc(S.msg||"")+'</span>';
-  document.querySelectorAll(".selbar").forEach(e=>{e.hidden=S.view==="compare";e.innerHTML=h;e.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>toggle(b.dataset.rm));const a=e.querySelector(".add");if(a)a.onchange=ev=>{if(ev.target.value&&!S.sel.includes(ev.target.value))toggle(ev.target.value);};const go=e.querySelector("[data-open-compare]");if(go)go.onclick=()=>{S.view="compare";try{history.replaceState(null,"","#compare");}catch(x){}render();};});
+  const h='<span class="tray-title">Comparing <span class="hint">'+S.sel.length+'/4 · '+esc(M[S.total].l)+'</span></span><div class="tray-countries">'+(S.sel.length?S.sel.map((iso,i)=>'<span class="chip" style="--cc:var('+COLORS[i]+')"><span class="dot"></span><button class="nm" type="button" data-pf="'+iso+'">'+esc(BY[iso].name)+'</button><span class="num">'+(BY[iso].s[S.total]?fmt(BY[iso].s[S.total][0]):'–')+'</span><button class="x" type="button" aria-label="Remove '+esc(BY[iso].name)+'" data-rm="'+iso+'">×</button></span>').join(""):'<span class="hint">Choose countries on the map or in the table.</span>')+'</div>'+ (S.sel.length?'<button type="button" class="btn" data-clear-compare>Clear all</button>':'')+ (S.sel.length<4?'<select class="add" aria-label="Add a country to compare"><option value="">+ Add country</option>'+OPTS+'</select>':'')+'<button type="button" class="btn tray-action" data-open-compare'+(S.sel.length?'':' disabled')+'>Compare countries →</button><span class="warn" role="status">'+esc(S.msg||"")+'</span>';
+  document.querySelectorAll(".selbar").forEach(e=>{e.hidden=S.view==="compare";e.innerHTML=h;e.querySelectorAll("[data-rm]").forEach(b=>b.onclick=()=>toggle(b.dataset.rm));const a=e.querySelector(".add");if(a)a.onchange=ev=>{if(ev.target.value&&!S.sel.includes(ev.target.value))toggle(ev.target.value);};const clear=e.querySelector("[data-clear-compare]");if(clear)clear.onclick=()=>{S.sel=[];render();};const go=e.querySelector("[data-open-compare]");if(go)go.onclick=()=>{S.view="compare";try{history.replaceState(null,"","#compare");}catch(x){}render();};});
 }
 /* ---------- map ---------- */
 const SMALL={AND:[1.52,42.51],ATG:[-61.8,17.08],BHR:[50.55,26.07],BRB:[-59.55,13.19],COM:[43.33,-11.65],CPV:[-23.6,15.1],DMA:[-61.37,15.42],FSM:[158.2,6.9],GRD:[-61.68,12.12],KIR:[173,1.4],KNA:[-62.75,17.3],LCA:[-60.98,13.9],LIE:[9.55,47.16],MCO:[7.42,43.74],MDV:[73.5,4.2],MHL:[171.2,7.1],MLT:[14.4,35.9],MUS:[57.55,-20.3],NRU:[166.93,-0.52],PLW:[134.5,7.5],SGP:[103.82,1.35],SMR:[12.45,43.94],STP:[6.6,0.2],SYC:[55.45,-4.6],TON:[-175.2,-21.2],TUV:[179.2,-8.5],VAT:[12.45,41.9],VCT:[-61.2,13.25],WSM:[-172.1,-13.8]};
@@ -460,7 +460,7 @@ function renderMap(){
   const scaleTxt=M[k].k==="size"?sizeNote(k):M[k].k==="total"?"Theme total, out of 100 (average of its parts)":"Rating, 0–100 (position among countries)";
   $("#m-explain").textContent=M[k].d+". "+(S.mc==="rank"?"Colours show rank bands among the "+N[k]+" countries with data.":"Each colour holds about a fifth of the countries with data. Scale: "+scaleTxt+".")+(M[k].cond?" This is a condition, not a measure of power.":"");
   $("#m-legend").innerHTML=classer.labels.map((l,i)=>'<span class="k"><i style="background:var(--r'+(i+1)+')"></i><span class="num">'+l+'</span></span>').reverse().join("")+(k==="nuclear_size"?'<span class="k xl"><i style="background:var(--r0)"></i>no weapons</span>':'')+'<span class="k xl"><i class="nd"></i>no data</span>';
-  $("#m-cap").textContent=M[k].k==="index"?"Ratings out of 100: position among countries rated (100 = top).":"Scores out of 100: 100 = the strongest country on that measure; others are a share of it."+(M[k].k==="total"?" A total averages its parts, so even the leader is below 100.":(k==="economic_size"?" Economy size averages two shares, so no country is 100.":""));
+  $("#m-cap").textContent=M[k].k==="index"?"Rating: position among countries rated (100 = top).":M[k].k==="total"?"A page-defined average of its available components, out of 100. Countries may have different components available.":k==="economic_size"?"Average of two GDP measures, each compared to its own leader; no country needs to score 100.":"Size compared with the leader on this measure (leader = 100).";
   d3.select("#map").selectAll("path.c,circle.s").style("fill",d=>fillOf(d.c,k)).classed("on",d=>d.c&&S.sel.includes(d.c.iso));
   const top=C.filter(c=>c.s[k]&&!isNone(c,k)).sort((a,b)=>a.s[k][1]-b.s[k][1]).slice(0,10);
   $("#m-toptitle").textContent="Top 10 · "+M[k].l;
@@ -498,7 +498,7 @@ function renderTable(){
   const th=(k,lab,cls,title)=>'<th data-s="'+k+'" class="'+(cls||"")+'"'+(ars(k)?' aria-sort="'+ars(k)+'"':'')+(title?' title="'+esc(title)+'"':'')+' tabindex="0">'+lab+ar(k)+'</th>';
   const gs=k=>first[k]?" gs":"";
   let h='<thead><tr class="grp desk"><th class="stk stk0"></th><th class="stk stk1"></th><th></th>'+grp.map(g=>'<th class="gh" colspan="'+g[1].length+'">'+g[0]+'</th>').join("")+(S.cols?'<th></th>':'')+'</tr><tr>'+
-    '<th class="l stk stk0" style="cursor:default" title="Rank on the selected total">#</th>'+th("name","Country","l stk stk1")+th(T,M[T].l+" <span class='hint'>(out of 100)</span>","l",M[T].l+": "+M[T].d)+
+    '<th class="l stk stk0" style="cursor:default" title="Rank in the selected theme (even when sorted by another column)">#</th>'+th("name","Country","l stk stk1")+th(T,M[T].l+" <span class='hint'>(out of 100)</span>","l",M[T].l+": "+M[T].d)+
     vis.map(k=>th(k,M[k].s,"desk"+gs(k),colTip(k))).join("")+(S.cols?'<th class="l desk" style="cursor:default">Strongest in</th>':'')+'<th class="mob" aria-label="Expand"></th></tr></thead><tbody>';
   let lastTier=-2;
   rows.forEach((c,i)=>{const m=c.s[T];
@@ -518,8 +518,8 @@ function renderTable(){
   $("#tbl").querySelectorAll("tr.r").forEach(tr=>tr.onclick=e=>{if(e.target.closest("button")) return; if(PD&&Math.hypot(e.clientX-PD[0],e.clientY-PD[1])>6) return; const sel=getSelection(); if(sel&&!sel.isCollapsed&&sel.toString().trim()) return; if(matchMedia("(max-width:760px)").matches){S.xp=S.xp===tr.dataset.iso?null:tr.dataset.iso;renderTable();} else openProfile(tr.dataset.iso);});
   $("#tbl").querySelectorAll("[data-tg]").forEach(b=>b.onclick=e=>{e.stopPropagation(); toggle(b.dataset.tg);});
   $("#tbl").querySelectorAll("[data-xp]").forEach(b=>b.onclick=()=>{S.xp=S.xp===b.dataset.xp?null:b.dataset.xp;renderTable();});
-  $("#moreBtn").hidden=!!filtered; $("#moreBtn").textContent=S.all?"Show top 25 only":"Show all "+total;
-  $("#moreHint").textContent=filtered?total+" countries match":S.all?"":"Showing the top 25.";
+  $("#moreBtn").hidden=!!filtered; $("#moreBtn").textContent=S.all?"Show first 25":"Show all "+total;
+  $("#moreHint").textContent="Rank (#) is for "+M[T].l+". "+(filtered?total+" countries match.":S.all?"":"Showing the first 25 in the current sort order.");
   fadeUpd();
 }
 let PD=null; $("#tbl").addEventListener("pointerdown",e=>{PD=[e.clientX,e.clientY];}); $("#tblwrap").addEventListener("scroll",fadeUpd); addEventListener("resize",fadeUpd);
