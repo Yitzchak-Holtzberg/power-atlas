@@ -115,11 +115,14 @@ select,input[type=search]{background:var(--panel);border:1px solid var(--line2);
 .legend .k:last-of-type i{border-right:1px solid var(--line2)}
 .legend .xl{margin-left:16px;min-width:64px}
 .legend .xl i{border-right:1px solid var(--line2)}
-.mapbox{position:relative;border:1px solid var(--line);background:var(--bg)}
+.mapbox{position:relative;border:1px solid var(--line);background:var(--panel2);overflow:hidden}
+#map .graticule{fill:none;stroke:var(--line2);stroke-width:.45;opacity:.45;pointer-events:none}
+.map-toolbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}.map-toolbar .ctl{flex-direction:row;align-items:center;gap:8px}.map-toolbar select{min-height:36px}.map-options{position:relative;margin-left:auto}.map-options summary{cursor:pointer;color:var(--muted);padding:6px 8px}.map-options[open] .seg{display:flex}.map-options .seg button{min-height:36px;font-size:13px}.maphead h2{font-size:18px}.legend{font-size:12px}.legend .k{min-width:60px}.legend .k i{height:8px}
+
 #map svg{width:100%;height:auto;display:block}
 #map path.c{stroke:var(--panel);stroke-width:.5;cursor:pointer}
 #map path.c:hover,#map circle.s:hover{stroke:var(--fg);stroke-width:1.4}
-#map .on{stroke:var(--fg)!important;stroke-width:2!important}
+#map .on{stroke:var(--fg)!important;stroke-width:1!important}
 #map circle.s{stroke:var(--fg);stroke-width:.6;cursor:pointer}
 .tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line2);border-radius:var(--rad);padding:9px 12px;font-size:14px;max-width:260px;z-index:3}
 .tip b{font-size:15px}
@@ -272,9 +275,9 @@ footer p{max-width:70ch}
     <section id="v-map" role="tabpanel" aria-labelledby="t-map" hidden>
       <div class="mapgrid">
         <div class="maphead">
-          <div class="controls">
-            <label class="ctl" for="m-key"><span>Show on map</span><select id="m-key"></select></label>
-            <div class="ctl"><span id="mc-lab">Colour by</span><div class="seg" role="group" aria-labelledby="mc-lab"><button type="button" id="mc-rank" data-mc="rank" title="Colours show rank bands: Top 5, 6 to 20, and so on">Rank band</button><button type="button" id="mc-q" data-mc="q" title="Each colour holds a fifth of the countries with data">Fifths (equal-size groups)</button></div></div>
+          <div class="map-toolbar">
+            <label class="ctl" for="m-key"><span>Measure</span><select id="m-key"></select></label>
+            <details class="map-options"><summary id="mc-lab">Colour options</summary><div class="seg" role="group" aria-labelledby="mc-lab"><button type="button" id="mc-rank" data-mc="rank" title="Colours show rank bands: Top 5, 6 to 20, and so on">Rank band</button><button type="button" id="mc-q" data-mc="q" title="Each colour holds a fifth of the countries with data">Fifths (equal-size groups)</button></div></details>
           </div>
           <h2 id="m-title"></h2>
           <div class="legend" id="m-legend"></div>
@@ -448,6 +451,7 @@ function initMap(){
   const proj=d3.geoEqualEarth().fitSize([960,440],{type:"FeatureCollection",features:feats}), path=d3.geoPath(proj);
   const svg=d3.select("#map").append("svg").attr("viewBox","0 0 960 440").attr("role","img").attr("aria-label","World map coloured by the selected measure");
   svg.append("defs").html('<pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" style="fill:var(--nodata-bg)"/><rect width="1.6" height="6" style="fill:var(--nodata)"/></pattern>');
+  svg.append("path").datum(d3.geoGraticule10()).attr("class","graticule").attr("d",path);
   const byNum={}; C.forEach(c=>{if(c.num) byNum[String(+c.num)]=c;});
   const used=new Set();
   feats.forEach(f=>{f.c=f.id!=null?byNum[String(+f.id)]:(f.properties.name==="Kosovo"?BY.XKX:null); if(f.c) used.add(f.c.iso);});
